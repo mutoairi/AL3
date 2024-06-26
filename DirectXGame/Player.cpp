@@ -13,4 +13,5 @@ void Player::Update() {
 };
 void Player::Draw() {
 	// 3Dモデルを描画
-                    model_->Draw()};
+	model_->Draw(worldTransform_,*viewPlojection_,textureHandle_);
+};
