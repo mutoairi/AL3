@@ -1,9 +1,16 @@
 #include "Player.h"
 #include<cassert>
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* model, uint32_t textureHandle,ViewProjection*viewProjection) {
 	assert(model); 
 	model_ = model;
-	worldTransform_
+	textureHandle_ = textureHandle;
+	worldTransform_.Initialize();
+	viewPlojection_ = viewProjection;
+
 };
-void Player::Update(){};
-void Player::Draw(){};
+void Player::Update() {
+	worldTransform_.TransferMatrix(); 
+};
+void Player::Draw() {
+	// 3Dモデルを描画
+                    model_->Draw()};
