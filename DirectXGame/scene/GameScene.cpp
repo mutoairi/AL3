@@ -1,20 +1,47 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include<myMath.h>
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { 
+	delete model_;
+	delete modelBlock_;
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		delete worldTransformBlock;
+	}
+	worldTransformBlocks_.clear();
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	
+	model_ = Model::Create();
+	modelBlock_ = Model::Create();
+	const uint32_t kNumBlockHorizontal = 20;
+	const float kBlockWidth = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockHorizontal);
+
+	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
+
+		worldTransformBlocks_[i] = new WorldTransform();
+		worldTransformBlocks_[i]->Initialize();
+		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
+		worldTransformBlocks_[i]->translation_.y = 0.0f;
+	}
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		//アフィン変換の作成
+		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+		//定数バッファに転送する
+		worldTransformBlock->TransferMatrix();
+	}
+}
 
 void GameScene::Draw() {
 
@@ -27,6 +54,9 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
+	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
+		modelBlock_->Draw(*worldTransformBlock,)
+	}
 	/// </summary>
 
 	// スプライト描画後処理
