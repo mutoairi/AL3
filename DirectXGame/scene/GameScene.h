@@ -46,7 +46,10 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 	Model* model_ = nullptr;
 	Model* modelBlock_ = nullptr;
-	std::vector<WorldTransform*> worldTransformBlocks_;
+	ViewProjection viewProjection_;
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	bool isDebugcameraActive_ = false;
+	
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

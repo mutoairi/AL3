@@ -8,8 +8,11 @@ GameScene::GameScene() {}
 GameScene::~GameScene() { 
 	delete model_;
 	delete modelBlock_;
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		delete worldTransformBlock;
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			delete worldTransformBlock;
+		}
 	}
 	worldTransformBlocks_.clear();
 }
@@ -21,25 +24,38 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	model_ = Model::Create();
 	modelBlock_ = Model::Create();
+	viewProjection_.Initialize();
 	const uint32_t kNumBlockHorizontal = 20;
+	const uint32_t kNumBlockVirtucal = 10;
 	const float kBlockWidth = 2.0f;
-	worldTransformBlocks_.resize(kNumBlockHorizontal);
+	const float kBlockHeight = 2.0f;
+	worldTransformBlocks_.resize(kNumBlockVirtucal);
 
-	for (uint32_t i = 0; i < kNumBlockHorizontal; ++i) {
-
-		worldTransformBlocks_[i] = new WorldTransform();
-		worldTransformBlocks_[i]->Initialize();
-		worldTransformBlocks_[i]->translation_.x = kBlockWidth * i;
-		worldTransformBlocks_[i]->translation_.y = 0.0f;
+	for (uint32_t i = 0; i < kNumBlockVirtucal; ++i) {
+		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
+		
+	}
+	for (uint32_t i = 0; i < kNumBlockVirtucal; ++i) {
+		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
+			worldTransformBlocks_[i][j] = new WorldTransform();
+			worldTransformBlocks_[i][j]->Initialize();
+			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+		}
 	}
 }
 
 void GameScene::Update() {
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		//アフィン変換の作成
-		worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-		//定数バッファに転送する
-		worldTransformBlock->TransferMatrix();
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			// アフィン変換の作成
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			// 定数バッファに転送する
+			worldTransformBlock->TransferMatrix();
+		}
 	}
 }
 
@@ -52,12 +68,8 @@ void GameScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに背景スプライトの描画処理を追加できる
-	for (WorldTransform* worldTransformBlock : worldTransformBlocks_) {
-		modelBlock_->Draw(*worldTransformBlock,)
-	}
 	/// </summary>
+	/// ここに背景スプライトの描画処理を追加できる
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -72,6 +84,16 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+	
+	for(std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_){
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+		}
+	}
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
