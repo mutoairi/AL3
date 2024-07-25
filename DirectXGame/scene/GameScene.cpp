@@ -9,6 +9,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete modelBlock_;
 	delete modelSkydome_;
+	delete mapChipField_;
 	delete debugCamera_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
@@ -20,7 +21,7 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize() {
-
+	
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -43,24 +44,38 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
+	//マップチップ
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+
 
 	debugCamera_ = new DebugCamera(1280, 720);
-	const uint32_t kNumBlockHorizontal = 20;
-	const uint32_t kNumBlockVirtucal = 10;
-	const float kBlockWidth = 2.0f;
-	const float kBlockHeight = 2.0f;
+	GenerateBlocks();
+	
+}
+
+void GameScene::GenerateBlocks() {
+     uint32_t kNumBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+	 uint32_t kNumBlockVirtucal = mapChipField_->GetNumBlockVirtical();
+	
 	worldTransformBlocks_.resize(kNumBlockVirtucal);
 
 	for (uint32_t i = 0; i < kNumBlockVirtucal; ++i) {
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-		
 	}
 	for (uint32_t i = 0; i < kNumBlockVirtucal; ++i) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			worldTransformBlocks_[i][j] = new WorldTransform();
-			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+
+
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j,i);
+			}
+			
+			
+			
 		}
 	}
 }
