@@ -49,6 +49,7 @@ private: // メンバ変数
 	uint32_t textureHandle_ = 0;
 	Model* model_ = nullptr;
 	Model* modelBlock_ = nullptr;
+	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	bool isDebugcameraActive_ = false;

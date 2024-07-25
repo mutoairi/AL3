@@ -24,9 +24,11 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	// ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("Resources/block.png");
+	textureHandle_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::Create();
 	modelBlock_ = Model::Create();
+	// ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 	// 自キャラの生成
 	player_ = new Player();
@@ -75,7 +77,9 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の更新と転送
 		viewProjection_.UpdateMatrix();
 	}
-	
+	// 自キャラの更新
+	player_->Update();
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -115,7 +119,10 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
+	// 3Dモデル描画
+	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	// 自キャラの描画
+		player_->Draw();
 	
 	for(std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_){
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
