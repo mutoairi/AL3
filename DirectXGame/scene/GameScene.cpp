@@ -25,8 +25,8 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	// ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("cube/cube.jpg");
-	model_ = Model::Create();
+	//textureHandle_ = TextureManager::Load("cube/cube.jpg");
+	model_ = Model::CreateFromOBJ("player", true);
 	modelBlock_ = Model::Create();
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -34,7 +34,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_, &viewProjection_);
+	player_->Initialize(model_, &viewProjection_);
 
 	// 天球の生成
 	skydome_ = new Skydome();
@@ -132,7 +132,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	// 3Dモデル描画
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection_);
 	
 	// 自キャラの描画
 		player_->Draw();
