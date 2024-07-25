@@ -23,9 +23,15 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	// ファイル名を指定してテクスチャを読み込む
+	textureHandle_ = TextureManager::Load("Resources/block.png");
 	model_ = Model::Create();
 	modelBlock_ = Model::Create();
 	viewProjection_.Initialize();
+	// 自キャラの生成
+	player_ = new Player();
+	// 自キャラの初期化
+	player_->Initialize(model_, textureHandle_, &viewProjection_);
 	debugCamera_ = new DebugCamera(1280, 720);
 	const uint32_t kNumBlockHorizontal = 20;
 	const uint32_t kNumBlockVirtucal = 10;
