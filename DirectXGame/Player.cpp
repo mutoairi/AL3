@@ -7,7 +7,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, ViewProjection* vi
 	worldTransform_.Initialize();
 	viewPlojection_ = viewProjection;
 };
-void Player::Update() { worldTransform_.TransferMatrix(); };
+void Player::Update() { worldTransform_.UpdateMatirx(); };
 void Player::Draw() {
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *viewPlojection_, textureHandle_);
