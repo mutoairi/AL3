@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cassert>
 #include<vector>
+#include"MapChipField.h"
 
 enum class LRDirection {
 	kRight,
@@ -33,6 +34,8 @@ private:
 	Model* model_ = nullptr;
 	// テクスチャハンドル
 	//uint32_t textureHandle_ = 0u;
+	// マップチップ
+	//MapChipField* mapChipField_ = nullptr;
 	// ビュープロジェクション
 	ViewProjection* viewPlojection_ = nullptr;
 	static inline const float kAcceleration = 0.1f;
