@@ -32,10 +32,15 @@ void GameScene::Initialize() {
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
+	// マップチップ
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 	// 自キャラの生成
 	player_ = new Player();
+	//座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	// 自キャラの初期化
-	player_->Initialize(model_, &viewProjection_);
+	player_->Initialize(model_, &viewProjection_,playerPosition);
 
 	// 天球の生成
 	skydome_ = new Skydome();
@@ -44,9 +49,7 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
-	//マップチップ
-	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+	
 
 
 	debugCamera_ = new DebugCamera(1280, 720);
