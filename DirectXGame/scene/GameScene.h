@@ -72,7 +72,7 @@ private: // メンバ変数
 
 	//カメラコントローラー
 	CameraController* camearaController_ = nullptr;
-	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

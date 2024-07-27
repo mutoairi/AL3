@@ -50,12 +50,14 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
-	//カメラコントローラー
-	camearaController_ = new CameraController;
+	// カメラコントロールの初期化
+	camearaController_ = new CameraController(); // 生成
 	camearaController_->Initialize();
-	camearaController_->SetMovableArea(cameraArea);
 	camearaController_->SetTarget(player_);
 	camearaController_->Reset();
+
+	CameraController::Rect movableArea_ = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	camearaController_->SetMovableArea(movableArea_);
 
 
 
@@ -120,6 +122,9 @@ void GameScene::Update() {
 	player_->Update();
 	//天球の更新
 	skydome_->Update();
+
+	//カメラコントローラーの更新
+	camearaController_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
