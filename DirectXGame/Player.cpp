@@ -15,13 +15,13 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 };
 void Player::Update() {
 
-	move();
+	Move();
 	
 	worldTransform_.translation_ += velocity_;
 	worldTransform_.UpdateMatirx(); 
 
 };
-void Player::move() {
+void Player::Move() {
 	// 移動入力
 	if (onGround_) {
 

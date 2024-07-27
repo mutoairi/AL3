@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete mapChipField_;
+	delete camearaController_;
 	delete debugCamera_;
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
@@ -49,7 +50,13 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
-	
+	//カメラコントローラー
+	camearaController_ = new CameraController;
+	camearaController_->Initialize();
+	camearaController_->SetMovableArea(cameraArea);
+	camearaController_->SetTarget(player_);
+	camearaController_->Reset();
+
 
 
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -102,8 +109,12 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の転送
 		viewProjection_.TransferMatrix();
 	} else {
+
+		viewProjection_.matView = camearaController_->GetViewProjection().matView;
+		viewProjection_.matProjection = camearaController_->GetViewProjection().matProjection;
+
 		// ビュープロジェクション行列の更新と転送
-		viewProjection_.UpdateMatrix();
+		viewProjection_.TransferMatrix();
 	}
 	// 自キャラの更新
 	player_->Update();
@@ -153,7 +164,13 @@ void GameScene::Draw() {
 	model_->Draw(worldTransform_, viewProjection_);
 	
 	// 自キャラの描画
-		player_->Draw();
+		player_->Draw(
+		
+		
+		
+		
+		
+		);
 	//天球の描画
 	    skydome_->Draw();
 	

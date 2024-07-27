@@ -20,9 +20,11 @@ public:
 	// 更新
 	void Update();
 	// 移動関数
-	void move();
+	void Move();
 	// 描画
 	void Draw();
+	const WorldTransform& GetWorldTransform() { return worldTransform_; };
+	const Vector3& GetVelocity() const { return velocity_; }
 
 private:
 	// ワールド変換データ

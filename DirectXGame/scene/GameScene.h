@@ -12,6 +12,7 @@
 #include"Player.h"
 #include"Skydome.h"
 #include"MapChipField.h"
+#include"CameraController.h"
 
 /// <summary>
 /// ゲームシーン
@@ -68,6 +69,10 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	Skydome* skydome_ = nullptr;
 	MapChipField* mapChipField_;
+
+	//カメラコントローラー
+	CameraController* camearaController_ = nullptr;
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
