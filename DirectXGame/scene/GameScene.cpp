@@ -42,7 +42,7 @@ void GameScene::Initialize() {
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
 	// 自キャラの初期化
 	player_->Initialize(model_, &viewProjection_,playerPosition);
-
+	player_->SetMapChipField(mapChipField_);
 	// 天球の生成
 	skydome_ = new Skydome();
 	// 天球3Dモデルの生成
@@ -120,6 +120,8 @@ void GameScene::Update() {
 	player_->Update();
 	//天球の更新
 	skydome_->Update();
+	//カメラコントローラー
+	camearaController_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 

@@ -9,10 +9,33 @@
 #include <cassert>
 #include<vector>
 #include"MapChipField.h"
+class MapChipField;
+
 
 enum class LRDirection {
 	kRight,
 	kLeft,
+
+};
+
+enum Corner {
+	kRightBottom, // 右下
+	kLeftBottom,  // 左下
+	kRightTop,    // 右上
+	kLeftTop,     // 左上
+
+	kNumCorner // 要素数
+};
+// マップとの当たり判定情報
+struct CollisionMapInfo {
+	// 天井衝突フラグ
+	bool ceilCollision = false;
+	// 着地フラグ
+	bool onLanding = false;
+	// 壁接触フラグ
+	bool wallContact = false;
+	// 移動量
+	Vector3 moveAmount;
 };
 class Player {
 public:
@@ -22,12 +45,22 @@ public:
 	void Update();
 	// 移動関数
 	void Move();
+	//マップの衝突判定
+	void MapCollisionDetection(CollisionMapInfo& info);
+	void MapTopCollision(CollisionMapInfo& info);
+	void MapBottomCollision(CollisionMapInfo& info);
+	void MapLightCollision(CollisionMapInfo& info);
+	void MapLeftCollision(CollisionMapInfo& info);
+	// 判定結果を反映して移動させる
+	void ResultMove(const CollisionMapInfo& info);
+	//天井に衝突している場合の処理	
+	void CollidingCeiling(const CollisionMapInfo& info);
 	// 描画
 	void Draw();
 	const WorldTransform& GetWorldTransform() { return worldTransform_; };
 	const Vector3& GetVelocity() const { return velocity_; }
-
-private:
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
+	Vector3 CornerPosition(const Vector3& center, Corner corner);
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
@@ -35,7 +68,7 @@ private:
 	// テクスチャハンドル
 	//uint32_t textureHandle_ = 0u;
 	// マップチップ
-	//MapChipField* mapChipField_ = nullptr;
+	MapChipField* mapChipField_ = nullptr;
 	// ビュープロジェクション
 	ViewProjection* viewPlojection_ = nullptr;
 	static inline const float kAcceleration = 0.1f;
@@ -56,6 +89,11 @@ private:
 	static inline const float kTimeTurn = 0.3f;
 	//接地状態フラグ
 	bool onGround_ = true;
+	// キャラクターの当たり判定サイズ
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
+
+	static inline const float kBlank = 1.0f;
 	
 	Vector3 velocity_ = {};
 };

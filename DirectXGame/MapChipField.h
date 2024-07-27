@@ -4,8 +4,20 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <vector>
+#include<stdint.h>
+#include<string>
 
 	enum class MapChipType { kBlank, kBlock };
+struct IndexSet {
+	uint32_t xIndex;
+	uint32_t yIndex;
+};
+struct Rect {
+	float left;   
+	float right;  
+	float bottom; 
+	float top;    
+};
 
 struct MapChipData {
 	std::vector<std::vector<MapChipType>> data;
@@ -25,6 +37,8 @@ class MapChipField {
 	void LoadMapChipCsv(const std::string& filePath);
 	MapChipType GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex);
 	Vector3 GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex);
+	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
+	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
 	private:
 	//1ブロックサイズ
 	static inline const float kBlockWidth = 1.0f;
