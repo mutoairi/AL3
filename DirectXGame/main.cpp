@@ -5,9 +5,8 @@
 #include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
+#include "Title.h"
 #include "WinApp.h"
-#include"Title.h"
-
 
 // シーン(型)
 enum class Scene {
@@ -73,7 +72,6 @@ void DrawScene() {
 		break;
 	}
 }
-
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	WinApp* win = nullptr;
@@ -83,7 +81,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
-	
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
@@ -141,9 +138,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		imguiManager->Begin();
 		// 入力関連の毎フレーム処理
 		input->Update();
-		//シーンの切り替え
+		// シーンの切り替え
 		ChangeScene();
-		//現在シーンの更新
+		// 現在シーン更新
 		UpdateScene();
 		// 軸表示の更新
 		axisIndicator->Update();
