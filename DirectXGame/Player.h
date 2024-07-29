@@ -8,8 +8,10 @@
 #include <algorithm>
 #include <cassert>
 #include<vector>
+#include"aabb.h"
 #include"MapChipField.h"
 class MapChipField;
+class Enemy;
 
 
 enum class LRDirection {
@@ -59,8 +61,14 @@ public:
 	void WallContact(const CollisionMapInfo& info);
 	//接地状態の切り替え
 	void ChangeGround(const CollisionMapInfo& info);
+	//衝突応答
+	void OnCollision(const Enemy* enemy);
 	// 描画
 	void Draw();
+	//ワールド座標を取得
+	Vector3 GetWorldPosition();
+	//AABBを取得
+	AABB GetAABB();
 	const WorldTransform& GetWorldTransform() { return worldTransform_; };
 	const Vector3& GetVelocity() const { return velocity_; }
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
@@ -76,8 +84,8 @@ public:
 	// ビュープロジェクション
 	ViewProjection* viewPlojection_ = nullptr;
 	static inline const float kAcceleration = 0.1f;
-	static inline const float kAttenuation = 0.05f;
-	static inline const float kLimitRunSpeed = 0.5f;
+	static inline const float kAttenuation = 0.5f;
+	static inline const float kLimitRunSpeed = 0.1f;
 	// 重力加速度(下方向)
 	static inline const float kGravityAcceleration = 0.1f;
 	// 最大落下速度(下方向)
@@ -102,6 +110,6 @@ public:
 	static inline const float kHeight = 0.8f;
 
 	static inline const float kBlank = 1.0f;
-	
+	static inline const float initialVelocity = 1.0f;
 	Vector3 velocity_ = {};
 };

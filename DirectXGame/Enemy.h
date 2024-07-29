@@ -4,6 +4,10 @@
 #include "ViewProjection.h"
 #include<vector>
 #include"MapChipField.h"
+#include"aabb.h"
+
+class Player;
+
 class Enemy {
 public:
 	// 初期化
@@ -12,6 +16,12 @@ public:
 	void Update();
 	// 描画
 	void Draw();
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
+	// AABBを取得
+	AABB GetAABB();
+	// 衝突応答
+	void OnCollision(const Player* player);
 
 	private:
 	//歩行の速さ
@@ -24,6 +34,9 @@ public:
 	static inline const float kWalklMotionTime = 1.0f;
 	// 経過時間
 	float walkTimer_ = 0.0f;
+	// キャラクターの当たり判定サイズ
+	static inline const float kWidth = 0.8f;
+	static inline const float kHeight = 0.8f;
 	// 速度
 	Vector3 velocity_ = {};
 	// ワールド変換データ

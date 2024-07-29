@@ -13,6 +13,7 @@
 #include"Enemy.h"
 #include"Skydome.h"
 #include"MapChipField.h"
+#include"aabb.h"
 #include"CameraController.h"
 
 
@@ -41,7 +42,8 @@ public: // メンバ関数
 	/// 毎フレーム処理
 	/// </summary>
 	void Update();
-
+	//すべての当たり判定を行う
+	void CheckAllCollisions();
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -68,9 +70,8 @@ private: // メンバ変数
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	bool isDebugcameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
-
 	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
+	std::list<Enemy*> enemies_;
 	Skydome* skydome_ = nullptr;
 	MapChipField* mapChipField_;
 
