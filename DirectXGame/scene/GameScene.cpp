@@ -121,7 +121,7 @@ void GameScene::Update() {
 	//天球の更新
 	skydome_->Update();
 	//カメラコントローラー
-	camearaController_->Update();
+	//camearaController_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
