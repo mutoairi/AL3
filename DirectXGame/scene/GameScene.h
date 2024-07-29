@@ -15,6 +15,7 @@
 #include"MapChipField.h"
 #include"aabb.h"
 #include"CameraController.h"
+#include"deathParticles.h"
 
 
 /// <summary>
@@ -74,7 +75,8 @@ private: // メンバ変数
 	std::list<Enemy*> enemies_;
 	Skydome* skydome_ = nullptr;
 	MapChipField* mapChipField_;
-
+	deathParticles* deathParticles_ = nullptr;
+	Model* modelParticles_ = nullptr;
 	//カメラコントローラー
 	CameraController* camearaController_ = nullptr;
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};

@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete mapChipField_;
 	delete camearaController_;
 	delete player_;
+	delete deathParticles_;
 	delete skydome_;
 	delete debugCamera_;
 	for (Enemy* enemy : enemies_) {
@@ -50,6 +51,11 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(model_, &viewProjection_,playerPosition);
 	player_->SetMapChipField(mapChipField_);
+	// パーティクルモデル
+	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
+	// 仮の生成
+	deathParticles_ = new deathParticles;
+	deathParticles_->Initialize(modelParticles_, &viewProjection_, playerPosition);
 	// 敵の生成
 	for (int32_t i = 0; i < 1; ++i) {
 		Enemy* newEnemy = new Enemy();
@@ -159,6 +165,10 @@ void GameScene::Update() {
 	CheckAllCollisions();
 	// 自キャラの更新
 	player_->Update();
+	// パーティクルの更新
+	if (deathParticles_) {
+		deathParticles_->Update();
+	}
 	// 敵の更新
 	for (Enemy* enemy : enemies_) {
 		enemy->Update();
@@ -219,10 +229,15 @@ void GameScene::Draw() {
 
 	// 自キャラの描画
 	player_->Draw();
+	// パーティクルの更新
+	if (deathParticles_) {
+		deathParticles_->Draw();
+	}
 	// 敵の描画
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
+
 	// 天球の描画
 	skydome_->Draw();
 	// 3Dオブジェクト描画後処理
