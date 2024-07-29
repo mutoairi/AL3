@@ -14,6 +14,7 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 	worldTransform_.translation_ = position;
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	viewPlojection_ = viewProjection;
+	
 };
 void Player::Update() {
 
@@ -374,8 +375,10 @@ AABB Player::GetAABB() {
 }
 void Player::OnCollision(const Enemy* enemy) {
 	(void)enemy;
-	//ジャンプ開始
-	velocity_ .y+= initialVelocity;
+	////ジャンプ開始
+	//velocity_ .y+= initialVelocity;
+	//デスフラグを立てる
+	isDead_ = true;
 }
 	void Player::Draw() {
 	// 3Dモデルを描画

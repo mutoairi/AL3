@@ -17,7 +17,11 @@
 #include"CameraController.h"
 #include"deathParticles.h"
 
-
+// ゲームのフェーズ(型)
+enum class Phase {
+	kPlay,  // ゲームプレイ
+	kDeath, // デス演出
+};
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -53,6 +57,11 @@ public: // メンバ関数
 	//表示ブロックの生成
 	void GenerateBlocks();
 
+	void ChangePhase();
+
+	// デスフラグのgetter
+	bool IsFinished() const { return finished_; }
+
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -77,6 +86,10 @@ private: // メンバ変数
 	MapChipField* mapChipField_;
 	deathParticles* deathParticles_ = nullptr;
 	Model* modelParticles_ = nullptr;
+    // ゲームの現在フェーズ(変数)
+	Phase phase_;
+	// 終了フラグ
+	bool finished_ = false;
 	//カメラコントローラー
 	CameraController* camearaController_ = nullptr;
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};

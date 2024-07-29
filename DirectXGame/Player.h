@@ -73,6 +73,7 @@ public:
 	const Vector3& GetVelocity() const { return velocity_; }
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
+	bool IsDead() const { return isDead_; }
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
@@ -112,4 +113,6 @@ public:
 	static inline const float kBlank = 1.0f;
 	static inline const float initialVelocity = 1.0f;
 	Vector3 velocity_ = {};
+	// デスフラグ
+	bool isDead_ = false;
 };

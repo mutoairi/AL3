@@ -14,6 +14,8 @@ public:
 	void Update();
 	//描画
 	void Draw();
+	// デスグラグのgetter
+	bool IsFinished() const { return finished_; }
 
 private:
 	// モデル
@@ -30,7 +32,7 @@ private:
 	//分割した1個分の角度
 	 static inline const float kAngleUnit = (2 * std::numbers::pi_v<float> / kNumParticles);
 	// 終了フラグ
-	bool isFinished_ = false;
+	 bool finished_ = false;
 	// 経過時間カウント
 	float counter_ = 0.0f;
 	// 色変更オブジェクト
