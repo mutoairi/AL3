@@ -10,9 +10,11 @@
 #include <vector>
 #include"DebugCamera.h"
 #include"Player.h"
+#include"Enemy.h"
 #include"Skydome.h"
 #include"MapChipField.h"
 #include"CameraController.h"
+
 
 /// <summary>
 /// ゲームシーン
@@ -56,6 +58,7 @@ private: // メンバ変数
 	//uint32_t textureHandle_ = 0;
 	//モデル
 	Model* model_ = nullptr;
+	Model* modelEnemy_ = nullptr;
 	Model* modelBlock_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	//ワールドトランスフォーム
@@ -67,6 +70,7 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 
 	Player* player_ = nullptr;
+	Enemy* enemy_ = nullptr;
 	Skydome* skydome_ = nullptr;
 	MapChipField* mapChipField_;
 

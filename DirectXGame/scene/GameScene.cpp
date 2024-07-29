@@ -7,6 +7,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene() { 
 	delete model_;
+	delete modelEnemy_;
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete mapChipField_;
@@ -29,6 +30,7 @@ void GameScene::Initialize() {
 	// ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::CreateFromOBJ("player", true);
+	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 	modelBlock_ = Model::CreateFromOBJ("block", true);
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -43,6 +45,15 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(model_, &viewProjection_,playerPosition);
 	player_->SetMapChipField(mapChipField_);
+	// 敵キャラの生成
+	enemy_ = new Enemy();
+	// 座標をマップチップ番号で指定
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10, 18);
+	// 敵キャラの初期化
+	enemy_->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
+	//enemy_->SetMapChipField(mapChipField_);
+	
+	
 	// 天球の生成
 	skydome_ = new Skydome();
 	// 天球3Dモデルの生成
@@ -118,6 +129,8 @@ void GameScene::Update() {
 	}
 	// 自キャラの更新
 	player_->Update();
+	//敵の更新
+	enemy_->Update();
 	//天球の更新
 	skydome_->Update();
 	//カメラコントローラー
@@ -162,19 +175,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	// 3Dモデル描画
-	model_->Draw(worldTransform_, viewProjection_);
 	
-	// 自キャラの描画
-		player_->Draw(
-		
-		
-		
-		
-		
-		);
-	//天球の描画
-	    skydome_->Draw();
 	
 	for(std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_){
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -184,7 +185,12 @@ void GameScene::Draw() {
 		}
 	}
 
-
+	// 自キャラの描画
+	player_->Draw();
+	//敵キャラの描画
+	enemy_->Draw();
+	// 天球の描画
+	skydome_->Draw();
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
