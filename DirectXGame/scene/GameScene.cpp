@@ -29,7 +29,7 @@ void GameScene::Initialize() {
 	// ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::CreateFromOBJ("player", true);
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("block", true);
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -39,7 +39,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = new Player();
 	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
 	// 自キャラの初期化
 	player_->Initialize(model_, &viewProjection_,playerPosition);
 	player_->SetMapChipField(mapChipField_);
@@ -121,7 +121,7 @@ void GameScene::Update() {
 	//天球の更新
 	skydome_->Update();
 	//カメラコントローラー
-	//camearaController_->Update();
+	camearaController_->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 

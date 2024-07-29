@@ -55,6 +55,10 @@ public:
 	void ResultMove(const CollisionMapInfo& info);
 	//天井に衝突している場合の処理	
 	void CollidingCeiling(const CollisionMapInfo& info);
+	//壁に接触している場合の処理
+	void WallContact(const CollisionMapInfo& info);
+	//接地状態の切り替え
+	void ChangeGround(const CollisionMapInfo& info);
 	// 描画
 	void Draw();
 	const WorldTransform& GetWorldTransform() { return worldTransform_; };
@@ -89,6 +93,10 @@ public:
 	static inline const float kTimeTurn = 0.3f;
 	//接地状態フラグ
 	bool onGround_ = true;
+	static inline const float kGrandingHeight = 0.06f;
+	static inline const float kAttenuationLanding = 0.1f;
+	static inline const float kAttenuationWall = 1.0f;
+
 	// キャラクターの当たり判定サイズ
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
