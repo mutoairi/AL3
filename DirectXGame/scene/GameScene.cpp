@@ -29,7 +29,7 @@ void GameScene::Initialize() {
 	// ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("cube/cube.jpg");
 	model_ = Model::CreateFromOBJ("player", true);
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("block", true);
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
