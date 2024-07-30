@@ -7,7 +7,6 @@
 #include "TextureManager.h"
 #include "Title.h"
 #include "WinApp.h"
-
 // シーン(型)
 enum class Scene {
 	kUnknown = 0,

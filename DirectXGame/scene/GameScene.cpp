@@ -138,28 +138,31 @@ void GameScene::CheckAllCollisions() {
 }
 
 void GameScene::ChangePhase() {
-	switch (phase_) {
-	case Phase::kPlay:
-		if (player_->IsDead()) {
-			// 死亡演出フェーズに切り替え
-			phase_ = Phase::kDeath;
-			// 自キャラの座標を取得
-			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
-			deathParticles_ = new deathParticles;
-			deathParticles_->Initialize(modelParticles_, &viewProjection_, deathParticlesPosition);
-		}
-		break;
-	case Phase::kDeath:
-		// デス演出フェーズの処理
-		if (deathParticles_ && deathParticles_->IsFinished()) {
-			finished_ = true;
-		}
-		break;
+	
+		switch(phase_) {
+		case Phase::kPlay:
+			if (player_->IsDead()) {
+				// 死亡演出フェーズに切り替え
+				phase_ = Phase::kDeath;
+				// 自キャラの座標を取得
+				const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+				deathParticles_ = new deathParticles;
+				deathParticles_->Initialize(modelParticles_, &viewProjection_, deathParticlesPosition);
+			}
+			break;
+		case Phase::kDeath:
+			// デス演出フェーズの処理
+			if (deathParticles_ && deathParticles_->IsFinished()) {
+				finished_ = true;
+			}
+			break;
 	}
 }
 
 void GameScene::Update() {
 	ChangePhase();
+	// デバッグカメラの更新
+	debugCamera_->Update();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_SPACE)) {
 		if (isDebugcameraActive_ == true)
@@ -170,6 +173,19 @@ void GameScene::Update() {
 #endif
 	switch (phase_) {
 	case Phase::kPlay:
+		// 全ての当たり判定を行う
+		CheckAllCollisions();
+		// 自キャラの更新
+		player_->Update();
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
+		}
+		// 天球の更新
+		skydome_->Update();
+		// カメラコントローラー
+		camearaController_->Update();
+
 		// カメラ処理
 		if (isDebugcameraActive_) {
 			// デバッグカメラの更新
@@ -186,19 +202,7 @@ void GameScene::Update() {
 			// ビュープロジェクション行列の更新と転送
 			viewProjection_.TransferMatrix();
 		}
-		// 全ての当たり判定を行う
-		CheckAllCollisions();
-		// 自キャラの更新
-		player_->Update();
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
-		// 天球の更新
-		skydome_->Update();
-		// カメラコントローラー
-		camearaController_->Update();
-
+		
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
 			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
