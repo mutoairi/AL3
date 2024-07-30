@@ -57,7 +57,7 @@ void GameScene::Initialize() {
 	deathParticles_ = new deathParticles;
 	deathParticles_->Initialize(modelParticles_, &viewProjection_, playerPosition);
 	// 敵の生成
-	for (int32_t i = 0; i < 1; ++i) {
+	for (int32_t i = 0; i < 3; ++i) {
 		Enemy* newEnemy = new Enemy();
 		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i * 3, 18);
 		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
