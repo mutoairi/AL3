@@ -102,6 +102,9 @@ private: // メンバ変数
 	//カメラコントローラー
 	CameraController* camearaController_ = nullptr;
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	// サウンドデータハンドル
+	uint32_t soundDataHandle_ = 0;
+	uint32_t voiceHandle_ = 0;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
