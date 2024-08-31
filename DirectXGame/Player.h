@@ -12,7 +12,7 @@
 #include"MapChipField.h"
 class MapChipField;
 class Enemy;
-
+class Goal;
 
 enum class LRDirection {
 	kRight,
@@ -63,6 +63,7 @@ public:
 	void ChangeGround(const CollisionMapInfo& info);
 	//衝突応答
 	void OnCollision(const Enemy* enemy);
+	void OnCollision2(const Goal* goal);
 	// 描画
 	void Draw();
 	//ワールド座標を取得
@@ -88,7 +89,7 @@ public:
 	static inline const float kAttenuation = 0.5f;
 	static inline const float kLimitRunSpeed = 0.1f;
 	// 重力加速度(下方向)
-	static inline const float kGravityAcceleration = 0.1f;
+	static inline const float kGravityAcceleration = 0.08f;
 	// 最大落下速度(下方向)
 	static inline const float kLimitFallSpeed = 1.0f;
 	// ジャンプ初速(上方向)

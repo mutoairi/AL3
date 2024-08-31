@@ -380,6 +380,8 @@ void Player::OnCollision(const Enemy* enemy) {
 	//デスフラグを立てる
 	isDead_ = true;
 }
+void Player::OnCollision2(const Goal* goal) { (void)goal; }
+
 	void Player::Draw() {
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *viewPlojection_);

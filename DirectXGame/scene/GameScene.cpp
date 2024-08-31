@@ -9,12 +9,17 @@ GameScene::~GameScene() {
 	delete model_;
 	delete modelEnemy_;
 	delete modelBlock_;
+	delete modelGoal_;
 	delete modelSkydome_;
+	delete modelParticles2_;
+	delete modelParticles_;
 	delete mapChipField_;
 	delete camearaController_;
 	delete player_;
 	delete deathParticles_;
+	delete clearParticles_;
 	delete skydome_;
+	delete goal_;
 	delete debugCamera_;
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
@@ -35,9 +40,10 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	// ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("cube/cube.jpg");
-	model_ = Model::CreateFromOBJ("player", true);
+	model_ = Model::CreateFromOBJ("player2", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 	modelBlock_ = Model::CreateFromOBJ("block", true);
+	modelGoal_ = Model::CreateFromOBJ("anko", true);
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -51,21 +57,30 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(model_, &viewProjection_,playerPosition);
 	player_->SetMapChipField(mapChipField_);
+	// Goalの生成
+	goal_ = new Goal();
+	Vector3 goalPosition = mapChipField_->GetMapChipPositionByIndex(40, 18);
+	// Goalの初期化
+	goal_->Initialize(modelGoal_, &viewProjection_, goalPosition);
 	// パーティクルモデル
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
+	// パーティクルモデル
+	modelParticles2_ = Model::CreateFromOBJ("deathParticle", true);
 	// 仮の生成
 	deathParticles_ = new deathParticles;
 	deathParticles_->Initialize(modelParticles_, &viewProjection_, playerPosition);
+	// 仮の生成
+	clearParticles_ = new ClearParticle;
+	clearParticles_->Initialize(modelParticles_, &viewProjection_, goalPosition);
 	// 敵の生成
-	for (int32_t i = 0; i < 3; ++i) {
+	for (int32_t i = 0; i < 15; ++i) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i * 3, 18);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i * 10, 18-i*2+i);
 		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 	}
 	
 	//enemy_->SetMapChipField(mapChipField_);
-	
 	
 	// 天球の生成
 	skydome_ = new Skydome();
@@ -136,6 +151,25 @@ void GameScene::CheckAllCollisions() {
 	#pragma endregion
 
 }
+void GameScene::CheckAllCollisions2() {
+#pragma region 自キャラと敵の当たり判定
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+	// 自キャラの座標
+	aabb1 = player_->GetAABB();
+	// 自キャラと敵すべての当たり判定
+	
+		aabb2 = goal_->GetAABB();
+		// AABB同士の交差判定
+		if (AABB::IsCollision(aabb1, aabb2)) {
+			// 自キャラの衝突時のコールバックを呼び出す
+			player_->OnCollision2(goal_);
+			// 敵キャラの衝突時のコールバックを呼び出す
+			goal_->OnCollision(player_);
+		}
+	
+#pragma endregion
+}
 
 void GameScene::ChangePhase() {
 	
@@ -148,6 +182,12 @@ void GameScene::ChangePhase() {
 				const Vector3& deathParticlesPosition = player_->GetWorldPosition();
 				deathParticles_ = new deathParticles;
 				deathParticles_->Initialize(modelParticles_, &viewProjection_, deathParticlesPosition);
+		    } else if (goal_->IsDead()) {
+			    phase_ = Phase::kClear;
+			    // 自キャラの座標を取得
+			    const Vector3& clearParticlesPosition = goal_->GetWorldPosition();
+			    clearParticles_ = new ClearParticle;
+			    clearParticles_->Initialize(modelParticles2_, &viewProjection_, clearParticlesPosition);
 			}
 			break;
 		case Phase::kDeath:
@@ -156,6 +196,12 @@ void GameScene::ChangePhase() {
 				finished_ = true;
 			}
 			break;
+	    case Phase::kClear:
+		    // デス演出フェーズの処理
+		    if (clearParticles_ && clearParticles_->IsFinished()) {
+			    finished_ = true;
+		    }
+		    break;
 	}
 }
 
@@ -175,12 +221,14 @@ void GameScene::Update() {
 	case Phase::kPlay:
 		// 全ての当たり判定を行う
 		CheckAllCollisions();
+		CheckAllCollisions2();
 		// 自キャラの更新
 		player_->Update();
 		// 敵の更新
 		for (Enemy* enemy : enemies_) {
 			enemy->Update();
 		}
+		goal_->Update();
 		// 天球の更新
 		skydome_->Update();
 		// カメラコントローラー
@@ -242,6 +290,52 @@ void GameScene::Update() {
 		}
 		// 天球の更新
 		skydome_->Update();
+		goal_->Update();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				// アフィン変換の作成
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				// 定数バッファに転送する
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+		break;
+	case Phase::kClear:
+		// パーティクルの更新
+		if (clearParticles_) {
+			clearParticles_->Update();
+		}
+		// 自キャラの更新
+		player_->Update();
+		// 敵の更新
+		for (Enemy* enemy : enemies_) {
+			enemy->Update();
+		}
+		
+		// 天球の更新
+		skydome_->Update();
+		// カメラコントローラー
+		camearaController_->Update();
+
+		// カメラ処理
+		if (isDebugcameraActive_) {
+			// デバッグカメラの更新
+			debugCamera_->Update();
+			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+			// ビュープロジェクション行列の転送
+			viewProjection_.TransferMatrix();
+		} else {
+
+			viewProjection_.matView = camearaController_->GetViewProjection().matView;
+			viewProjection_.matProjection = camearaController_->GetViewProjection().matProjection;
+
+			// ビュープロジェクション行列の更新と転送
+			viewProjection_.TransferMatrix();
+		}
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 
@@ -255,7 +349,6 @@ void GameScene::Update() {
 			}
 		}
 		break;
-	
 	}
 	
 }
@@ -291,11 +384,12 @@ void GameScene::Draw() {
 	switch (phase_) {
 	case Phase::kPlay: // 自キャラの描画
 		player_->Draw();
+		goal_->Draw();
 		break;
 	case Phase::kDeath:
 		break;
 	}
-
+	
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
@@ -311,7 +405,9 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
-
+	if (clearParticles_) {
+		clearParticles_->Draw();
+	}
 	// 天球の描画
 	skydome_->Draw();
 	// 3Dオブジェクト描画後処理
