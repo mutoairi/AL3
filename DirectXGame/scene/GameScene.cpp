@@ -182,24 +182,31 @@ void GameScene::ChangePhase() {
 				const Vector3& deathParticlesPosition = player_->GetWorldPosition();
 				deathParticles_ = new deathParticles;
 				deathParticles_->Initialize(modelParticles_, &viewProjection_, deathParticlesPosition);
+			    soundDataHandle_ = audio_->LoadWave("maou_se_magical04.wav");
+			    voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
+
 		    } else if (goal_->IsDead()) {
 			    phase_ = Phase::kClear;
 			    // 自キャラの座標を取得
 			    const Vector3& clearParticlesPosition = goal_->GetWorldPosition();
 			    clearParticles_ = new ClearParticle;
 			    clearParticles_->Initialize(modelParticles2_, &viewProjection_, clearParticlesPosition);
+			    soundDataHandle2_ = audio_->LoadWave("maou_se_onepoint23.wav");
+			    voiceHandle2_ = audio_->PlayWave(soundDataHandle2_, true);
 			}
 			break;
 		case Phase::kDeath:
 			// デス演出フェーズの処理
 			if (deathParticles_ && deathParticles_->IsFinished()) {
 				finished_ = true;
+			    audio_->StopWave(voiceHandle_);
 			}
 			break;
 	    case Phase::kClear:
 		    // デス演出フェーズの処理
 		    if (clearParticles_ && clearParticles_->IsFinished()) {
 			    finished_ = true;
+			    audio_->StopWave(voiceHandle2_);
 		    }
 		    break;
 	}
