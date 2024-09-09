@@ -30,7 +30,7 @@ void Player::Update() {
 
 	CollidingCeiling(collisionMapInfo);
 	//接地
-	//ChangeGround(collisionMapInfo);
+	ChangeGround(collisionMapInfo);
 	//壁接触
 	WallContact(collisionMapInfo);
 
