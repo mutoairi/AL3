@@ -12,9 +12,6 @@ std::map<std::string, MapChipType> mapChipTable = {
 };
 }
 
-uint32_t MapChipField::GetNumBlockVirtical() { return kNumBlockVirtical; }
-
-uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }
 
 
 void MapChipField::ResetMapChipData() {
@@ -78,13 +75,13 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 	return mapChipData_.data[yIndex][xIndex];
 }
 
-IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
+MapChipField::IndexSet MapChipField::GetMapChipIndexSetByPosition(const Vector3& position) {
 	IndexSet indexSet = {};
-	indexSet.xIndex = uint32_t((position.x + (kBlockWidth / 2.0f)) / kBlockWidth);
-	indexSet.yIndex = uint32_t(kNumBlockVirtical - 1 - ((position.y + (kBlockHeight / 2.0f)) / kBlockHeight));
+	indexSet.xIndex = static_cast<uint32_t>((position.x + kBlockWidth / 2.0f) / kBlockWidth);
+	indexSet.yIndex = kNumBlockVirtical - 1 - static_cast<uint32_t>(position.y + kBlockHeight / 2.0f / kBlockHeight);
 	return indexSet;
 }
-Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
+MapChipField::Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
 	// 指定ブロックの中心座標を取得する
 	Vector3 center = GetMapChipPositionByIndex(xIndex, yIndex);
 	Rect rect;
@@ -96,3 +93,7 @@ Rect MapChipField::GetRectByIndex(uint32_t xIndex, uint32_t yIndex) {
 }
 
 Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0); }
+
+uint32_t MapChipField::GetNumBlockVirtical() { return kNumBlockVirtical; }
+
+uint32_t MapChipField::GetNumBlockHorizontal() { return kNumBlockHorizontal; }

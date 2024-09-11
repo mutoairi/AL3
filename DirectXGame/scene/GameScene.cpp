@@ -46,10 +46,12 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 	// 自キャラの生成
 	player_ = new Player();
-	//座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(2, 18);
+	// 自キャラの生成(モデル)
+	model_ = Model::CreateFromOBJ("player", true);
+	// 座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 1);
 	// 自キャラの初期化
-	player_->Initialize(model_, &viewProjection_,playerPosition);
+	player_->Initialize(model_, &viewProjection_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 	// パーティクルモデル
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
@@ -57,9 +59,9 @@ void GameScene::Initialize() {
 	deathParticles_ = new deathParticles;
 	deathParticles_->Initialize(modelParticles_, &viewProjection_, playerPosition);
 	// 敵の生成
-	for (int32_t i = 0; i < 3; ++i) {
+	for (int32_t i = 0; i < 1; ++i) {
 		Enemy* newEnemy = new Enemy();
-		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10 + i * 3, 18);
+		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(50 + i * 3, 18);
 		newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
 		enemies_.push_back(newEnemy);
 	}

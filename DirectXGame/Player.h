@@ -86,7 +86,7 @@ public:
 	ViewProjection* viewPlojection_ = nullptr;
 	static inline const float kAcceleration = 0.1f;
 	static inline const float kAttenuation = 0.5f;
-	static inline const float kLimitRunSpeed = 0.1f;
+	static inline const float kLimitRunSpeed = 0.8f;
 	// 重力加速度(下方向)
 	static inline const float kGravityAcceleration = 0.1f;
 	// 最大落下速度(下方向)
@@ -102,13 +102,14 @@ public:
 	static inline const float kTimeTurn = 0.3f;
 	//接地状態フラグ
 	bool onGround_ = true;
+	
 	static inline const float kGrandingHeight = 0.06f;
 	static inline const float kAttenuationLanding = 0.1f;
 	static inline const float kAttenuationWall = 1.0f;
 
 	// キャラクターの当たり判定サイズ
-	static inline const float kWidth = 0.8f;
-	static inline const float kHeight = 0.8f;
+	static inline const float kWidth = 1.0f;
+	static inline const float kHeight = 1.0f;
 
 	static inline const float kBlank = 1.0f;
 	static inline const float initialVelocity = 1.0f;
