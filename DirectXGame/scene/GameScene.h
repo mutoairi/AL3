@@ -88,6 +88,7 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	std::list<Enemy*> enemies_;
 	Skydome* skydome_ = nullptr;
+
 	Goal* goal_ = nullptr;
 	MapChipField* mapChipField_;
 	deathParticles* deathParticles_ = nullptr;
